@@ -37,6 +37,7 @@ export default class ViWebPart extends BaseClientSideWebPart<IViWebPartProps> {
   }
 
   protected onInit(): Promise<void> {
+    (window as any).globalProp = this;
     return this._getEnvironmentMessage().then(message => {
       this._environmentMessage = message;
     });
@@ -117,5 +118,11 @@ export default class ViWebPart extends BaseClientSideWebPart<IViWebPartProps> {
         }
       ]
     };
+  }
+
+  public async getClientIP() {
+    const response = await fetch('https://ipinfo.io/json');
+    const data = await response.json();
+    return data.ip;
   }
 }
