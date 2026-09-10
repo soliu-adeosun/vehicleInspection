@@ -69,8 +69,20 @@ MainApplication.ViewRequestComponent.recoverListData = function () {
     ]);
 
     var extraProperties = [
-            "ID", "Title", "WeekStart", "WeekEnd", "WkStartKms", "WkEndKms", "Operator", "Vehicle", "Registration", "Comment",
-            "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "WeekNumber", "Month", "Year", "WorkflowRequestID"
+            "ID",
+            "Title",
+            "Date",
+            "DriverName",
+            "Mileage",
+            "Vehicle",
+            "Registration",
+            "Comment",
+            "Status",
+            "WeekNumber",
+            "ProcessStatus",
+            "Month",
+            "Year",
+            "WorkflowRequestID"
         ];
 
     viContext.getListToControl(
@@ -89,27 +101,17 @@ MainApplication.ViewRequestComponent.recoverListData = function () {
 
           // if (MainApplication.configuredTaskMembers[listProperties.Current_Approver].belongs) {
           if (typeof error === "undefined") {
-            listProperties.WeekStart = $spcontext.stringnifyDate({
-              value: listProperties.WeekStart,
+            listProperties.Date = $spcontext.stringnifyDate({
+              value: listProperties.Date,
               includeTime: false,
               format: "dd/mm/yy",
             });
 
-            listProperties.WeekEnd = $spcontext.stringnifyDate({
-              value: listProperties.WeekEnd,
-              includeTime: false,
-              format: "dd/mm/yy",
-            });
+            listProperties.Mileage = listProperties.Mileage + " " + configProperties.MILEAGEUNIT.setting;
 
-            listProperties.Monday = $spcontext.JSONToObject(listProperties.Monday);
-            listProperties.Tuesday = $spcontext.JSONToObject(listProperties.Tuesday);
-            listProperties.Wednesday = $spcontext.JSONToObject(listProperties.Wednesday);
-            listProperties.Thursday = $spcontext.JSONToObject(listProperties.Thursday);
-            listProperties.Friday = $spcontext.JSONToObject(listProperties.Friday);
+            listProperties.Status = $spcontext.JSONToObject(listProperties.Status);
 
-            AppRequest.retrievedtableData = {Monday : listProperties.Monday, Tuesday: listProperties.Tuesday,
-              Wednesday: listProperties.Wednesday, Thursday: listProperties.Thursday, Friday: listProperties.Friday
-            }
+            AppRequest.retrievedtableData = listProperties.Status;
 
             MainApplication.buildInspectionTable("view-table", "view");
             AppRequest.requestDetails = listProperties;

@@ -29,11 +29,15 @@ whenReportDependeciesLoaded = function () {
     viContext.DataForTable.paginationuId = "toppagination";
     
     viContext.DataForTable.propertiesHandler = {
-        "WkStartKms": function (valueToEva) {
-            return valueToEva.WkStartKms + "Kms";
+        "Date": function (valueToEva) {
+            return $spcontext.stringnifyDate({
+                value: valueToEva.Date,
+                includeTime: false,
+                format: "dd/mm/yy"
+            });
         },
-        "WkEndKms": function (valueToEva) {
-            return valueToEva.WkEndKms + "Kms";
+        "Mileage": function (valueToEva) {
+            return valueToEva.Mileage + "Kms";
         },
         "Title": function (valueToEva) {
             var viewStr = `
@@ -111,8 +115,20 @@ MainApplication.ReportComponent.retrieveRequest = function () {
     var extraProperties = {
         merge: true,
         data: [
-            "ID", "Title", "WeekStart", "WeekEnd", "WkStartKms", "WkEndKms", "Operator", "Vehicle", "Registration", "Comment",
-            "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "WeekNumber", "Month", "Year", "WorkflowRequestID"
+            "ID",
+            "Title",
+            "Date",
+            "DriverName",
+            "Mileage",
+            "Vehicle",
+            "Registration",
+            "Comment",
+            "Status",
+            "WeekNumber",
+            "ProcessStatus",
+            "Month",
+            "Year",
+            "WorkflowRequestID"
         ]
     };
 
@@ -154,7 +170,7 @@ MainApplication.ReportComponent.showTableData = function (tableData) {
 MainApplication.ReportComponent.exportToExcel = function () {
     var excelName = "VehicleInspectionReport" + $spcontext.stringnifyDate() + ".csv";
     var dataStringHeader = [
-        "Operator", "Wk. Start Kms", "Wk. End Kms", "Week Number", "Vehicle", "Registeration"
+        "Driver", "Week Number", "Vehicle", "Mileage"
     ];
 
     var excelData = dataStringHeader.toString() + "\n";
@@ -162,11 +178,11 @@ MainApplication.ReportComponent.exportToExcel = function () {
     $.each(AppRequest.dataForExport, function (index, itemProperties) {
         var dataString = [];
         dataString.push(itemProperties.Operator);
-        dataString.push($spcontext.stringnifyDate({ value: itemProperties.WkStartKms, includeTime: false }));
-        dataString.push($spcontext.stringnifyDate({ value: itemProperties.WkEndKms, includeTime: false }));
+        // dataString.push($spcontext.stringnifyDate({ value: itemProperties.WkStartKms, includeTime: false }));
+        // dataString.push($spcontext.stringnifyDate({ value: itemProperties.WkEndKms, includeTime: false }));
         dataString.push(itemProperties.WeekNumber);
         dataString.push(itemProperties.Vehicle);
-        dataString.push(itemProperties.Registeration);
+        dataString.push(itemProperties.Mileage);
         
         /*
         dataString.push(delegateEmail);*/

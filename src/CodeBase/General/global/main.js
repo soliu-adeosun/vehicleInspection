@@ -454,77 +454,113 @@ MainApplication.reportSyncSearch = function (keyquery, data) {
 };
 
 
-MainApplication.buildInspectionTable = function (containerId, mode = "view", data = null) {
-    
-    const tableData = AppRequest.retrievedtableData;
-    
-    if (!tableData || !tableData.Monday) {
+MainApplication.buildInspectionTable = function (
+    containerId,
+    mode = "view",
+    data = null
+) {
+    // Use supplied data, otherwise fall back to retrieved data
+    const tableData = data || AppRequest.retrievedtableData;
+
+    if (!Array.isArray(tableData) || tableData.length === 0) {
         console.warn("No inspection data available");
         return;
     }
 
-    // Extract items from Monday (assuming consistent structure across days)
-    const sampleDay = tableData.Monday;
-    const items = sampleDay.map(entry => {
-        return Object.keys(entry).find(key => key !== "Defect");
-    }).filter(Boolean);
+    // Extract inspection items
+    const items = tableData
+        .map(entry => Object.keys(entry)[0])
+        .filter(Boolean);
 
-    let html = '';
+    let html = "";
 
-    if (mode === "view") {
-        html += `
-            <thead>
-                <tr>
-                    <th>S/N</th>
-                    <th>Inspection Items</th>
-                    <th>Monday</th>
-                    <th>Tuesday</th>
-                    <th>Wednesday</th>
-                    <th>Thursday</th>
-                    <th>Friday</th>
-                    <th>Defect / Notes</th>
-                </tr>
-            </thead>
-            <tbody>`;
-    } else {
-        // Edit Mode
-        html;
-    }
+    html += `
+        <thead>
+            <tr>
+                <th>S/N</th>
+                <th>Inspection Items</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
 
     items.forEach((item, index) => {
-        const defect = tableData.Monday.find(entry => entry[item])?.Defect || "Nil";
+        const entry = tableData.find(e => e[item]);
+
+        const status = entry
+            ? String(entry[item]).trim()
+            : "";
+
+        const statusClass = status.toLowerCase();
 
         if (mode === "view") {
+
             html += `
                 <tr>
                     <td>${index + 1}</td>
-                    <td style="text-align:left;">${item}</td>
-                    <td>${tableData.Monday.find(e => e[item])?.[item] === "Yes" ? "✔" : "✘"}</td>
-                    <td>${tableData.Tuesday.find(e => e[item])?.[item] === "Yes" ? "✔" : "✘"}</td>
-                    <td>${tableData.Wednesday.find(e => e[item])?.[item] === "Yes" ? "✔" : "✘"}</td>
-                    <td>${tableData.Thursday.find(e => e[item])?.[item] === "Yes" ? "✔" : "✘"}</td>
-                    <td>${tableData.Friday.find(e => e[item])?.[item] === "Yes" ? "✔" : "✘"}</td>
-                    <td>${defect}</td>
-                </tr>`;
+
+                    <td style="text-align:left;">
+                        ${item}
+                    </td>
+
+                    <td>
+                        <span class="inspection-status ${statusClass}">
+                            ${status || "N/A"}
+                        </span>
+                    </td>
+                </tr>
+            `;
+
         } else {
-            // Edit Mode - with checkboxes and textarea
+
+            // Edit Mode
             html += `
                 <tr>
                     <td>${index + 1}</td>
-                    <td class="inspection-item">${item}</td>
-                    <td class="checkbox-cell"><input type="checkbox" class="day-check" data-day="Monday" data-item="${item}" ${tableData.Monday.find(e => e[item])?.[item] === "Yes" ? "checked" : ""}></td>
-                    <td class="checkbox-cell"><input type="checkbox" class="day-check" data-day="Tuesday" data-item="${item}" ${tableData.Tuesday.find(e => e[item])?.[item] === "Yes" ? "checked" : ""}></td>
-                    <td class="checkbox-cell"><input type="checkbox" class="day-check" data-day="Wednesday" data-item="${item}" ${tableData.Wednesday.find(e => e[item])?.[item] === "Yes" ? "checked" : ""}></td>
-                    <td class="checkbox-cell"><input type="checkbox" class="day-check" data-day="Thursday" data-item="${item}" ${tableData.Thursday.find(e => e[item])?.[item] === "Yes" ? "checked" : ""}></td>
-                    <td class="checkbox-cell"><input type="checkbox" class="day-check" data-day="Friday" data-item="${item}" ${tableData.Friday.find(e => e[item])?.[item] === "Yes" ? "checked" : ""}></td>
-                    <td><textarea class="defect-text" data-item="${item}">${defect === "Nil" ? "" : defect}</textarea></td>
-                </tr>`;
+
+                    <td class="inspection-item">
+                        ${item}
+                    </td>
+
+                    <td class="status-cell">
+
+                        <label class="status-option good">
+                            <input
+                                type="radio"
+                                name="status-${index}"
+                                value="Good"
+                                class="status-radio"
+                                data-item="${item}"
+                                ${status.toLowerCase() === "good" ? "checked" : ""}
+                            >
+                            <span>Good</span>
+                        </label>
+
+                        <label class="status-option bad">
+                            <input
+                                type="radio"
+                                name="status-${index}"
+                                value="Bad"
+                                class="status-radio"
+                                data-item="${item}"
+                                ${status.toLowerCase() === "bad" ? "checked" : ""}
+                            >
+                            <span>Bad</span>
+                        </label>
+
+                    </td>
+                </tr>
+            `;
         }
     });
 
-    html += `</tbody>`;
+    html += `
+        </tbody>
+    `;
 
     const container = document.getElementById(containerId);
+
     if (container) {
         container.innerHTML = html;
     } else {

@@ -32,14 +32,11 @@ export default class Report extends React.Component<{}, {}> {
             <thead>
               <tr>
                 <th>S/N</th>
-                <th speed-table-data="Operator" scope="col">
-                  Operator 
+                <th speed-table-data="DriverName" scope="col">
+                  Driver Name
                 </th>
-                <th speed-table-data="WkStartKms" scope="col">
-                  Wk. Start Kms 
-                </th>
-                <th speed-table-data="WkEndKms" scope="col">
-                  Wk. End Kms 
+                <th speed-table-data="Date" scope="col">
+                  Date 
                 </th>
                 <th speed-table-data="WeekNumber" scope="col">
                   Week Number 
@@ -50,7 +47,10 @@ export default class Report extends React.Component<{}, {}> {
                 <th speed-table-data="Registration" scope="col">
                   Registeration 
                 </th>
-                <th speed-table-data="Status" scope="col">
+                <th speed-table-data="Mileage" scope="col">
+                  Mileage 
+                </th>
+                <th speed-table-data="ProcessStatus" scope="col">
                   Status 
                 </th>
                 <th speed-table-data="Title" scope="col">

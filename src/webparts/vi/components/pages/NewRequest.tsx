@@ -14,7 +14,7 @@ export default class NewRequest extends React.Component<{}, {}> {
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label" htmlFor="cm-date">
-                  Week Start
+                  Date
                   <span className="req" aria-hidden="true">
                     *
                   </span>
@@ -23,22 +23,23 @@ export default class NewRequest extends React.Component<{}, {}> {
                   className="form-input"
                   type="date"
                   id="cm-date"
-                  speed-bind-validate="WeekStart"
+                  speed-bind-validate="Date"
                   speed-bind-class="MetaData"
                 />
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="">
-                  Week End
+                  Mileage
                   <span className="req" aria-hidden="true">
                     *
                   </span>
                 </label>
                 <input
                   className="form-input"
-                  type="date"
-                  speed-bind-validate="WeekEnd"
+                  type="number"
+                  speed-bind-validate="Mileage"
                   speed-bind-class="MetaData"
+                  placeholder="Enter mileage e.g. 1000"
                 />
               </div>
             </div>
@@ -46,37 +47,7 @@ export default class NewRequest extends React.Component<{}, {}> {
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label">
-                  Wk. Start Kms
-                  <span className="req" aria-hidden="true">
-                      *
-                    </span>
-                </label>
-                <input
-                  className="form-input"
-                  type="number"
-                  speed-bind-validate="WkStartKms"
-                  speed-bind-class="MetaData"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">
-                  Wk. End Kms
-                  <span className="req" aria-hidden="true">
-                      *
-                    </span>
-                </label>
-                <input
-                  className="form-input"
-                  type="number"
-                  speed-bind-validate="WkEndKms"
-                  speed-bind-class="MetaData"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-                <label className="form-label">
-                  Operator
+                  Driver Name
                   <span className="req" aria-hidden="true">
                       *
                     </span>
@@ -84,12 +55,11 @@ export default class NewRequest extends React.Component<{}, {}> {
                 <input
                   className="form-input"
                   type="text"
-                  speed-bind-validate="Operator"
+                  speed-bind-validate="DriverName"
                   speed-bind-class="MetaData"
+                  placeholder="Enter driver name"
                 />
               </div>
-
-            <div className="form-row">
               <div className="form-group">
                 <label className="form-label">
                   Vehicle
@@ -97,26 +67,17 @@ export default class NewRequest extends React.Component<{}, {}> {
                       *
                     </span>
                 </label>
-                <input
-                  className="form-input"
-                  type="text"
+                <select
+                  className="form-select"
                   speed-bind-validate="Vehicle"
                   speed-bind-class="MetaData"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">
-                  Registration
-                  <span className="req" aria-hidden="true">
-                      *
-                    </span>
-                </label>
-                <input
-                  className="form-input"
-                  type="text"
-                  speed-bind-validate="Registration"
-                  speed-bind-class="MetaData"
-                />
+                  id="vehicle-select"
+                >
+                  <option value="">Select a vehicle</option>
+                  <option value="Vehicle 1" data-registration="REG001">Vehicle 1</option>
+                  <option value="Vehicle 2" data-registration="REG002">Vehicle 2</option>
+                  <option value="Vehicle 3" data-registration="REG003">Vehicle 3</option>
+                </select>
               </div>
             </div>
             
@@ -130,23 +91,8 @@ export default class NewRequest extends React.Component<{}, {}> {
                 <th scope="col">
                   Inspection Items
                 </th>
-                <th data-bind="Monday" scope="col">
-                  Monday 
-                </th>
-                <th data-bind="Tuesday" scope="col">
-                  Tuesday 
-                </th>
-                <th data-bind="Wednesday" scope="col">
-                  Wednesday 
-                </th>
-                <th data-bind="Thursday" scope="col">
-                  Thursday 
-                </th>
-                <th data-bind="Friday" scope="col">
-                  Friday 
-                </th>
-                <th data-bind="Defect" scope="col">
-                  Defect 
+                <th data-bind="Status" scope="col">
+                  Status
                 </th>
               </tr>
             </thead>
@@ -160,13 +106,17 @@ export default class NewRequest extends React.Component<{}, {}> {
           <div className="form-group">
             <label className="form-label" htmlFor="fh-comments">
               Comments / Recommendations
+              <span className="req" aria-hidden="true">
+                      *
+                    </span>
             </label>
             <textarea
               className="form-input"
               id="fh-comments"
               rows={4}
               placeholder="Add any comments or recommendations from the inspection..."
-              speed-bind="Comment"
+              speed-bind-validate="Comment"
+              speed-validate-msg="Please enter comments or recommendations"
             />
           </div>
 
@@ -181,7 +131,7 @@ export default class NewRequest extends React.Component<{}, {}> {
             </ClientButton>
             <ClientButton
               func="NewRequestComponent.confirmSubmit"
-              clax="btn btn-ghost"
+              clax="btn btn-ghost hidden"
               prop="save"
             >
               Save for later

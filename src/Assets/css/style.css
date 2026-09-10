@@ -1608,3 +1608,58 @@ legend {
 p {
   margin: 0 !important;
 }
+
+
+
+.status-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.status-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.status-option input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Good */
+.status-option.good:has(input:checked) {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+/* Bad */
+.status-option.bad:has(input:checked) {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.status-option.good input[type="radio"]:checked {
+  accent-color: #16a34a;
+}
+
+.status-option.bad input[type="radio"]:checked {
+  accent-color: #dc2626;
+}
+
+.inspection-status {
+    font-weight: 700;
+}
+
+.inspection-status.good {
+    color: #16a34a;
+}
+
+.inspection-status.bad {
+    color: #dc2626;
+}

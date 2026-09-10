@@ -86,20 +86,15 @@ MainApplication.NewRequestComponent.recoverListData = function () {
     var extraProperties = [
       "ID",
       "Title",
-      "WeekStart",
-      "WeekEnd",
-      "WkStartKms",
-      "WkEndKms",
-      "Operator",
+      "Date",
+      "DriverName",
+      "Mileage",
       "Vehicle",
       "Registration",
       "Comment",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
+      "Status",
       "WeekNumber",
+      "ProcessStatus",
       "Month",
       "Year",
     ];
@@ -116,7 +111,7 @@ MainApplication.NewRequestComponent.recoverListData = function () {
         } else {
           // customWorkflowEngine.routeEngine(customWorkflowEngine).updateRoutesinFlow(listProperties, function (resolved) {
           //     customWorkflowEngine.routeEngine(customWorkflowEngine).
-          //     PageSecurity(customWorkflowEngine.stages.securityModeView, listProperties.Current_Approver, listProperties.Approval_Status, function (error) {
+          //     PageSecurity(customWorkflowEngine.stages.securityModeView, listProperties.Current_Approver, listProperties.Approval_ProcessStatus, function (error) {
 
           // if (MainApplication.configuredTaskMembers[listProperties.Current_Approver].belongs) {
           if (typeof error === "undefined") {
@@ -132,29 +127,11 @@ MainApplication.NewRequestComponent.recoverListData = function () {
               format: "yy-mm-dd",
             });
 
-            listProperties.Monday = $spcontext.JSONToObject(
-              listProperties.Monday,
-            );
-            listProperties.Tuesday = $spcontext.JSONToObject(
-              listProperties.Tuesday,
-            );
-            listProperties.Wednesday = $spcontext.JSONToObject(
-              listProperties.Wednesday,
-            );
-            listProperties.Thursday = $spcontext.JSONToObject(
-              listProperties.Thursday,
-            );
-            listProperties.Friday = $spcontext.JSONToObject(
-              listProperties.Friday,
+            listProperties.Status = $spcontext.JSONToObject(
+              listProperties.Status,
             );
 
-            AppRequest.retrievedtableData = {
-              Monday: listProperties.Monday,
-              Tuesday: listProperties.Tuesday,
-              Wednesday: listProperties.Wednesday,
-              Thursday: listProperties.Thursday,
-              Friday: listProperties.Friday,
-            };
+            AppRequest.retrievedtableData = listProperties.Status;
 
             MainApplication.buildInspectionTable("data-table", "edit");
             AppRequest.requestDetails = listProperties;
@@ -208,16 +185,15 @@ MainApplication.NewRequestComponent.saveDataToList = function () {
     AppRequest.tableRecord = MainApplication.NewRequestComponent.collectData();
     formData.RequestCreated = $spcontext.serverDate();
 
-    formData.Monday = AppRequest.tableRecord.Monday;
-    formData.Monday = JSON.stringify(formData.Monday);
-    formData.Tuesday = AppRequest.tableRecord.Tuesday;
-    formData.Tuesday = JSON.stringify(formData.Tuesday);
-    formData.Wednesday = AppRequest.tableRecord.Wednesday;
-    formData.Wednesday = JSON.stringify(formData.Wednesday);
-    formData.Thursday = AppRequest.tableRecord.Thursday;
-    formData.Thursday = JSON.stringify(formData.Thursday);
-    formData.Friday = AppRequest.tableRecord.Friday;
-    formData.Friday = JSON.stringify(formData.Friday);
+    formData.Status = AppRequest.tableRecord;
+    formData.Status = JSON.stringify(formData.Status);
+
+    const selectedVehicle = document.getElementById("vehicle-select");
+
+    const selectedOption = selectedVehicle.options[selectedVehicle.selectedIndex];
+
+    const registration = selectedOption.dataset.registration;
+    formData.Registration = registration;
 
     const inspectionDate = new Date($("#cm-date").val());
 
@@ -226,10 +202,13 @@ MainApplication.NewRequestComponent.saveDataToList = function () {
     formData.WeekNumber = Number(formData.WeekNumber);
     formData.Year = $spcontext.serverDate().getFullYear();
     formData.Month = $spcontext.serverDate().getMonth();
+    formData.InitiatorName = CurrentUserProperties.title;
+    formData.InitiatorEmailAddress = CurrentUserProperties.login;
+    formData.HOD = SP.FieldUserValue.fromUser(MainApplication.staffDetails[formData.InitiatorEmailAddress].HodEmail);
     if (AppRequest.action === "save") {
-      formData.Status = "Save";
+      formData.ProcessStatus = "Save";
     } else if (AppRequest.action === "submit") {
-      formData.Status = "Submit";
+      formData.ProcessStatus = "Submit";
     }
 
     console.log("Form Data to be submitted:", formData);
@@ -330,61 +309,61 @@ MainApplication.NewRequestComponent.generateTable = function () {
 
   inspectionItems.forEach((item, index) => {
     const row = document.createElement("tr");
+
     row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td class="inspection-item">${item}</td>
-                    <td class="checkbox-cell"><input type="checkbox" class="day-check" data-day="Monday" data-item="${item}"></td>
-                    <td class="checkbox-cell"><input type="checkbox" class="day-check" data-day="Tuesday" data-item="${item}"></td>
-                    <td class="checkbox-cell"><input type="checkbox" class="day-check" data-day="Wednesday" data-item="${item}"></td>
-                    <td class="checkbox-cell"><input type="checkbox" class="day-check" data-day="Thursday" data-item="${item}"></td>
-                    <td class="checkbox-cell"><input type="checkbox" class="day-check" data-day="Friday" data-item="${item}"></td>
-                    <td><textarea class="defect-text" data-item="${item}" placeholder="Defect / Notes..."></textarea></td>
-                `;
+      <td>${index + 1}</td>
+
+      <td class="inspection-item">
+        ${item}
+      </td>
+
+      <td class="status-cell">
+        <label class="status-option good">
+          <input 
+            type="radio" 
+            name="status-${index}" 
+            value="Good"
+            class="status-radio"
+            data-item="${item}"
+          >
+          <span>Good</span>
+        </label>
+
+        <label class="status-option bad">
+          <input 
+            type="radio" 
+            name="status-${index}" 
+            value="Bad"
+            class="status-radio"
+            data-item="${item}"
+          >
+          <span>Bad</span>
+        </label>
+      </td>
+    `;
+
     tbody.appendChild(row);
   });
 };
 
 MainApplication.NewRequestComponent.collectData = function () {
-  const checks = document.querySelectorAll(".day-check");
-  const defects = document.querySelectorAll(".defect-text");
+  const radios = document.querySelectorAll(".status-radio");
 
-  // Group defects by item (Nil if empty)
-  const defectMap = {};
-  defects.forEach((textarea) => {
-    const item = textarea.getAttribute("data-item");
-    defectMap[item] = textarea.value.trim() || "Nil";
-  });
+  const result = [];
 
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-  const result = {};
-
-  days.forEach((day) => {
-    result[day] = [];
-
-    // Get all items (we assume items are in the checkboxes)
-    const items = new Set();
-    checks.forEach((checkbox) => {
-      items.add(checkbox.getAttribute("data-item"));
-    });
-
-    items.forEach((item) => {
-      // Find checkbox for this day and item
-      const checkbox = Array.from(checks).find(
-        (chk) =>
-          chk.getAttribute("data-day") === day &&
-          chk.getAttribute("data-item") === item,
-      );
-
-      const status = checkbox && checkbox.checked ? "Yes" : "No";
+  radios.forEach((radio) => {
+    if (radio.checked) {
+      const item = radio.getAttribute("data-item");
+      const status = radio.value;
 
       const entry = {};
       entry[item] = status;
-      entry.Defect = defectMap[item] || "Nil";
 
-      result[day].push(entry);
-    });
+      result.push(entry);
+    }
   });
 
   console.log(result);
-  return result; // Added return for convenience
+
+  return result;
 };

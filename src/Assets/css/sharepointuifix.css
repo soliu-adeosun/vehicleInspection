@@ -39,10 +39,11 @@ input[type="number"]::-webkit-outer-spin-button {
 div[data-automationid="AppChrome"] {
   margin: 0 !important;
   border-radius: 0 !important;
+  border: 0 !important;
 }
 
-div[data-is-scrollable="true"] {
-  overflow-y: hidden !important;
+div[data-automation-id="contentScrollRegion"] {
+  overflow: hidden !important;
 }
 
 a {

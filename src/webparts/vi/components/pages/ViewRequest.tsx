@@ -14,25 +14,25 @@ export default class NewRequest extends React.Component<{}, {}> {
                 <div className="form-row">
                   <div className="form-group">
                     <label className="form-label" htmlFor="cm-date">
-                      Week Start
+                     Date
                     </label>
                     <input
                       className="form-input"
                       type="text"
                       id="cm-date"
-                      speed-bind="WeekStart"
+                      speed-bind="Date"
                       speed-bind-class="MetaData"
                       readOnly
                     />
                   </div>
                   <div className="form-group">
                     <label className="form-label" htmlFor="">
-                      Week End
+                      Mileage
                     </label>
                     <input
                       className="form-input"
                       type="text"
-                      speed-bind="WeekEnd"
+                      speed-bind="Mileage"
                       speed-bind-class="MetaData"
                       readOnly
                     />
@@ -42,47 +42,17 @@ export default class NewRequest extends React.Component<{}, {}> {
                 <div className="form-row">
                   <div className="form-group">
                     <label className="form-label" htmlFor="cm-seats">
-                      Wk. Start Kms
-                    </label>
-                    <input
-                      className="form-input"
-                      type="number"
-                      id="cm-seats"
-                      speed-bind="WkStartKms"
-                      speed-bind-class="MetaData"
-                      readOnly
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label" htmlFor="cm-seats">
-                      Wk. End Kms
-                    </label>
-                    <input
-                      className="form-input"
-                      type="number"
-                      id="cm-seats"
-                      speed-bind="WkEndKms"
-                      speed-bind-class="MetaData"
-                      readOnly
-                    />
-                  </div>
-                </div>
-    
-                <div className="form-group">
-                    <label className="form-label" htmlFor="cm-seats">
-                      Operator
+                      Driver Name
                     </label>
                     <input
                       className="form-input"
                       type="text"
                       id="cm-seats"
-                      speed-bind="Operator"
+                      speed-bind="DriverName"
                       speed-bind-class="MetaData"
                       readOnly
                     />
                   </div>
-    
-                <div className="form-row">
                   <div className="form-group">
                     <label className="form-label" htmlFor="cm-seats">
                       Vehicle
@@ -92,19 +62,6 @@ export default class NewRequest extends React.Component<{}, {}> {
                       type="text"
                       id="cm-seats"
                       speed-bind="Vehicle"
-                      speed-bind-class="MetaData"
-                      readOnly
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label" htmlFor="cm-seats">
-                      Registration
-                    </label>
-                    <input
-                      className="form-input"
-                      type="text"
-                      id="cm-seats"
-                      speed-bind="Registration"
                       speed-bind-class="MetaData"
                       readOnly
                     />
