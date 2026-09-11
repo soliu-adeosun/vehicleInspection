@@ -13,6 +13,22 @@ export default class NewRequest extends React.Component<{}, {}> {
           <div id="create-menu-form">
             <div className="form-row">
               <div className="form-group">
+                <label className="form-label">
+                  Vehicle
+                  <span className="req" aria-hidden="true">
+                    *
+                  </span>
+                </label>
+                <select
+                  className="form-select"
+                  speed-bind-validate="Vehicle"
+                  speed-bind-class="MetaData"
+                  id="vehicle-select"
+                >
+                  <option value="">Select a vehicle</option>
+                </select>
+              </div>
+              <div className="form-group">
                 <label className="form-label" htmlFor="cm-date">
                   Date
                   <span className="req" aria-hidden="true">
@@ -27,6 +43,8 @@ export default class NewRequest extends React.Component<{}, {}> {
                   speed-bind-class="MetaData"
                 />
               </div>
+            </div>
+            <div className="form-row">
               <div className="form-group">
                 <label className="form-label" htmlFor="">
                   Mileage
@@ -42,15 +60,12 @@ export default class NewRequest extends React.Component<{}, {}> {
                   placeholder="Enter mileage e.g. 1000"
                 />
               </div>
-            </div>
-
-            <div className="form-row">
               <div className="form-group">
                 <label className="form-label">
                   Driver Name
                   <span className="req" aria-hidden="true">
-                      *
-                    </span>
+                    *
+                  </span>
                 </label>
                 <input
                   className="form-input"
@@ -60,46 +75,23 @@ export default class NewRequest extends React.Component<{}, {}> {
                   placeholder="Enter driver name"
                 />
               </div>
-              <div className="form-group">
-                <label className="form-label">
-                  Vehicle
-                  <span className="req" aria-hidden="true">
-                      *
-                    </span>
-                </label>
-                <select
-                  className="form-select"
-                  speed-bind-validate="Vehicle"
-                  speed-bind-class="MetaData"
-                  id="vehicle-select"
-                >
-                  <option value="">Select a vehicle</option>
-                  <option value="Vehicle 1" data-registration="REG001">Vehicle 1</option>
-                  <option value="Vehicle 2" data-registration="REG002">Vehicle 2</option>
-                  <option value="Vehicle 3" data-registration="REG003">Vehicle 3</option>
-                </select>
-              </div>
             </div>
-            
           </div>
 
           <div className="table-wrap" style={{ marginTop: "20px" }}>
-          <table aria-label="Staff bookings">
-            <thead>
-              <tr>
-                <th>S/N</th>
-                <th scope="col">
-                  Inspection Items
-                </th>
-                <th data-bind="Status" scope="col">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody id="data-table" />
-          </table>
-          
-        </div>
+            <table aria-label="Staff bookings">
+              <thead>
+                <tr>
+                  <th>S/N</th>
+                  <th scope="col">Inspection Items</th>
+                  <th data-bind="Status" scope="col">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="data-table" />
+            </table>
+          </div>
         </div>
 
         <div id="food-inspection-form" style={{ marginTop: "20px" }}>
@@ -107,8 +99,8 @@ export default class NewRequest extends React.Component<{}, {}> {
             <label className="form-label" htmlFor="fh-comments">
               Comments / Recommendations
               <span className="req" aria-hidden="true">
-                      *
-                    </span>
+                *
+              </span>
             </label>
             <textarea
               className="form-input"

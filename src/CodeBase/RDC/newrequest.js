@@ -52,7 +52,13 @@ function whenNewRequestDependeciesLoaded() {
     "itemid",
     window.location.href,
   );
+  $("#vehicle-select").html(
+    '<option value="">Select a vehicle</option>' + MainApplication.vehicles.map(v => `<option value="${v.Title}" data-registration="${v.Registeration}" data-licenseplate="${v.LicensePlate}">${v.Title}</option>`
+  ).join(""));
   AppRequest.mode = $spcontext.getParameterByName("mode", window.location.href);
+
+  $("#cm-date").on("change", MainApplication.NewRequestComponent.runVehicleWeekCheck);
+  $("#vehicle-select").on("change", MainApplication.NewRequestComponent.runVehicleWeekCheck);
 
   customWorkflowEngine = new WorkflowManagerEngine(CurrentUserProperties);
   globalDefinitions.SetWorkflowRouting(customWorkflowEngine);
@@ -367,3 +373,77 @@ MainApplication.NewRequestComponent.collectData = function () {
 
   return result;
 };
+
+MainApplication.NewRequestComponent.checkIfVehicleWeekExists = function (callback) {
+  const selectedVehicle = document.getElementById("vehicle-select");
+  const vehicleValue = selectedVehicle ? selectedVehicle.value : "";
+  const inspectionDateVal = $("#cm-date").val();
+
+  // Not enough data yet → treat as "does not exist"
+  if (!vehicleValue || !inspectionDateVal) {
+    if (typeof callback === "function") callback(false);
+    return;
+  }
+
+  const inspectionDate = new Date(inspectionDateVal);
+  const weekNumber = MainApplication.NewRequestComponent.getWeekNumber(inspectionDate);
+  const year = inspectionDate.getFullYear();
+
+  var query = [
+    { rowlimit: 1 },
+    {
+      operator: "Eq",
+      field: "Vehicle",
+      type: "Text",
+      val: vehicleValue
+    },
+    {
+      operator: "Eq",
+      field: "WeekNumber",
+      type: "Number",
+      val: weekNumber
+    },
+    {
+      operator: "Eq",
+      field: "Year",
+      type: "Number",
+      val: year
+    }
+  ];
+
+  // When editing, exclude the current record
+  if (AppRequest.itemId) {
+    query.push({
+      operator: "Neq",
+      field: "WorkflowRequestID",
+      type: "Text",
+      val: AppRequest.itemId
+    });
+  }
+
+  var caml = $spcontext.camlBuilder(query);
+
+  viContext.getItem(
+    globalDefinitions.stageDefinitions.listname,
+    caml,
+    function (_spMeta) {
+      const exists = _spMeta.get_count() > 0;
+      if (typeof callback === "function") callback(exists);
+    },
+    function () {
+      // On error → allow the user to continue
+      if (typeof callback === "function") callback(false);
+    }
+  );
+};
+
+MainApplication.NewRequestComponent.runVehicleWeekCheck = function() {
+  MainApplication.NewRequestComponent.checkIfVehicleWeekExists(function (exists) {
+    if (exists) {
+      globalDefinitions.HandlerError(
+        "This vehicle already has an inspection recorded for the selected week."
+      );
+      $("#cm-date").val("");
+    }
+  });
+}

@@ -50,9 +50,9 @@ export default class Report extends React.Component<{}, {}> {
                 <th speed-table-data="Mileage" scope="col">
                   Mileage 
                 </th>
-                <th speed-table-data="ProcessStatus" scope="col">
+                {/* <th speed-table-data="ProcessStatus" scope="col">
                   Status 
-                </th>
+                </th> */}
                 <th speed-table-data="Title" scope="col">
                   Action 
                 </th>

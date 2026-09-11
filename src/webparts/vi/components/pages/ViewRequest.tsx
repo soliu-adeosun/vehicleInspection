@@ -13,6 +13,19 @@ export default class NewRequest extends React.Component<{}, {}> {
               <div id="create-menu-form">
                 <div className="form-row">
                   <div className="form-group">
+                    <label className="form-label" htmlFor="cm-seats">
+                      Vehicle
+                    </label>
+                    <input
+                      className="form-input"
+                      type="text"
+                      id="cm-seats"
+                      speed-bind="Vehicle"
+                      speed-bind-class="MetaData"
+                      readOnly
+                    />
+                  </div>
+                  <div className="form-group">
                     <label className="form-label" htmlFor="cm-date">
                      Date
                     </label>
@@ -25,6 +38,10 @@ export default class NewRequest extends React.Component<{}, {}> {
                       readOnly
                     />
                   </div>
+                  
+                </div>
+    
+                <div className="form-row">
                   <div className="form-group">
                     <label className="form-label" htmlFor="">
                       Mileage
@@ -37,9 +54,6 @@ export default class NewRequest extends React.Component<{}, {}> {
                       readOnly
                     />
                   </div>
-                </div>
-    
-                <div className="form-row">
                   <div className="form-group">
                     <label className="form-label" htmlFor="cm-seats">
                       Driver Name
@@ -53,19 +67,7 @@ export default class NewRequest extends React.Component<{}, {}> {
                       readOnly
                     />
                   </div>
-                  <div className="form-group">
-                    <label className="form-label" htmlFor="cm-seats">
-                      Vehicle
-                    </label>
-                    <input
-                      className="form-input"
-                      type="text"
-                      id="cm-seats"
-                      speed-bind="Vehicle"
-                      speed-bind-class="MetaData"
-                      readOnly
-                    />
-                  </div>
+                  
                 </div>
                 
               </div>

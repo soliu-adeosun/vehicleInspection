@@ -100,7 +100,7 @@ function whenLayoutLoaded() {
   //============================================================================================
   $spcontext.loadSPDependencies(function () {
     var dependenciesCount = 0;
-    var expectedDepenciesCount = 7;
+    var expectedDepenciesCount = 8;
     // speedctxRoot = new Speed();
     globalDefinitions = new GlobalDefinitionsManager();
 
@@ -246,6 +246,50 @@ function whenLayoutLoaded() {
             }
             checkAppDependency();
           },
+        );
+
+        var vehicleQuery = [
+            {
+                ascending: "TRUE",
+                orderby: "Title"
+            }
+        ];
+
+        viContext.getItem(
+            "Vehicles",
+            viContext.camlBuilder([vehicleQuery]),
+            function (_spMeta) {
+
+                MainApplication.vehicles = [];
+
+                var listEnumerator = _spMeta.getEnumerator();
+
+                while (listEnumerator.moveNext()) {
+
+                    var currentItem = listEnumerator.get_current();
+
+                    var title = $spcontext.checkNull(
+                        currentItem.get_item("Title")
+                    );
+
+                    var registeration = $spcontext.checkNull(
+                        currentItem.get_item("Registeration")
+                    );
+
+                    var licenseplate = $spcontext.checkNull(
+                        currentItem.get_item("LicensePlate")
+                    );
+
+                    MainApplication.vehicles.push({
+                        Title: title,
+                        Registeration: registeration,
+                        LicensePlate: licenseplate
+                    });
+                }
+
+
+                checkAppDependency();
+            }
         );
 
         // runGroupChecks();

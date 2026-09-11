@@ -1614,7 +1614,7 @@ p {
 .status-cell {
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   gap: 20px;
 }
 
@@ -1663,3 +1663,14 @@ p {
 .inspection-status.bad {
     color: #dc2626;
 }
+
+/* #vehicle-select option {
+    background-color: #000;
+    color: #fff;
+}
+
+input[type="date"] {
+    background-color: #000;
+    color: #fff;
+    color-scheme: dark;
+} */
