@@ -55,6 +55,14 @@ function whenNewRequestDependeciesLoaded() {
   $("#vehicle-select").html(
     '<option value="">Select a vehicle</option>' + MainApplication.vehicles.map(v => `<option value="${v.Title}" data-registration="${v.Registeration}" data-licenseplate="${v.LicensePlate}">${v.Title}</option>`
   ).join(""));
+
+  $("#driver-select").html(
+    '<option value="">Select a driver</option>' +
+      (MainApplication.drivers || [])
+        .map((d) => `<option value="${d.Title}">${d.Title}</option>`)
+        .join("")
+  );
+
   AppRequest.mode = $spcontext.getParameterByName("mode", window.location.href);
 
   $("#cm-date").on("change", MainApplication.NewRequestComponent.runVehicleWeekCheck);

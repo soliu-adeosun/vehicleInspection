@@ -67,13 +67,14 @@ export default class NewRequest extends React.Component<{}, {}> {
                     *
                   </span>
                 </label>
-                <input
-                  className="form-input"
-                  type="text"
+                <select
+                  className="form-select"
                   speed-bind-validate="DriverName"
                   speed-bind-class="MetaData"
-                  placeholder="Enter driver name"
-                />
+                  id="driver-select"
+                >
+                  <option value="">Select a driver</option>
+                </select>
               </div>
             </div>
           </div>

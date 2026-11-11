@@ -100,7 +100,7 @@ function whenLayoutLoaded() {
   //============================================================================================
   $spcontext.loadSPDependencies(function () {
     var dependenciesCount = 0;
-    var expectedDepenciesCount = 8;
+    var expectedDepenciesCount = 9;
     // speedctxRoot = new Speed();
     globalDefinitions = new GlobalDefinitionsManager();
 
@@ -281,12 +281,46 @@ function whenLayoutLoaded() {
                     );
 
                     MainApplication.vehicles.push({
+                        ID: currentItem.get_id(),
                         Title: title,
                         Registeration: registeration,
                         LicensePlate: licenseplate
                     });
                 }
 
+
+                checkAppDependency();
+            }
+        );
+
+        // Drivers list (Title only)
+        var driversQuery = [
+            {
+                ascending: "TRUE",
+                orderby: "Title"
+            }
+        ];
+
+        viContext.getItem(
+            "Drivers",
+            viContext.camlBuilder([driversQuery]),
+            function (_spMeta) {
+                MainApplication.drivers = [];
+
+                var listEnumerator = _spMeta.getEnumerator();
+
+                while (listEnumerator.moveNext()) {
+                    var currentItem = listEnumerator.get_current();
+                    var title = $spcontext.checkNull(
+                        currentItem.get_item("Title")
+                    );
+                    var id = currentItem.get_id();
+
+                    MainApplication.drivers.push({
+                        ID: id,
+                        Title: title
+                    });
+                }
 
                 checkAppDependency();
             }

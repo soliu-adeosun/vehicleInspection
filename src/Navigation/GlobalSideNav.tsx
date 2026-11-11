@@ -99,6 +99,26 @@ const GlobalSideNav: React.FC<GlobalSideNavProps> = ({
                         <i className="fa-solid fa-users" aria-hidden="true" />
                         <span className="nav-label">Report</span>
                     </Link>
+
+                    <Link
+                        to="/vehicles"
+                        onClick={onClose}
+                        className={`nav-item ${isActive("/vehicles") ? "active" : ""}`}
+                        aria-current={isActive("/vehicles") ? "page" : undefined}
+                    >
+                        <i className="fa-solid fa-car" aria-hidden="true" />
+                        <span className="nav-label">Vehicles</span>
+                    </Link>
+
+                    <Link
+                        to="/drivers"
+                        onClick={onClose}
+                        className={`nav-item ${isActive("/drivers") ? "active" : ""}`}
+                        aria-current={isActive("/drivers") ? "page" : undefined}
+                    >
+                        <i className="fa-solid fa-id-card" aria-hidden="true" />
+                        <span className="nav-label">Drivers</span>
+                    </Link>
                 </nav>
 
                 {/* <div className="sidebar-footer hidden">

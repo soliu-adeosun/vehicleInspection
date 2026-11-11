@@ -7,6 +7,8 @@ import {Layout} from "../../../Global/Layout";
 import NewRequest from "./pages/NewRequest";
 import Report from './pages/Report';
 import ViewRequest from './pages/ViewRequest';
+import Vehicles from './pages/Vehicles';
+import Drivers from './pages/Drivers';
 
 require('main');
 
@@ -16,6 +18,8 @@ declare global {
         loadNewRequestComponent: () => void;
         loadReportComponent : () => void;
         loadViewRequestComponent : () => void;
+        loadVehiclesComponent: () => void;
+        loadDriversComponent: () => void;
     }
 }
 export default class Vi extends React.Component<IViProps> {
@@ -30,6 +34,8 @@ export default class Vi extends React.Component<IViProps> {
                       <Route index element={<NewRequest />} />
                       <Route path="report" element={<Report />} />
                       <Route path="viewrequest" element={<ViewRequest />} />
+                      <Route path="vehicles" element={<Vehicles />} />
+                      <Route path="drivers" element={<Drivers />} />
                   </Route>
               </Routes>
           </HashRouter>

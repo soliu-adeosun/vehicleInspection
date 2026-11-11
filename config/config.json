@@ -71,7 +71,8 @@
       "path": "src/codebase/general/global/main.js",
       "globalName": "main",
       "globalDependencies": [
-        "speedpoint_core","notyf"
+        "speedpoint_core",
+        "notyf"
       ]
     },
     "global": {
@@ -180,6 +181,24 @@
     "customer": {
       "path": "src/codebase/rdc/customer.js",
       "globalName": "customer",
+      "globalDependencies": [
+        "global",
+        "speedpoint_core",
+        "main"
+      ]
+    },
+    "vehicles": {
+      "path": "src/codebase/rdc/vehicles.js",
+      "globalName": "vehicles",
+      "globalDependencies": [
+        "global",
+        "speedpoint_core",
+        "main"
+      ]
+    },
+    "drivers": {
+      "path": "src/codebase/rdc/drivers.js",
+      "globalName": "drivers",
       "globalDependencies": [
         "global",
         "speedpoint_core",
