@@ -87,7 +87,7 @@ MainApplication.DriversComponent.loadTable = function () {
               <button type="button" class="btn btn-sm btn-primary btn-icon driver-edit-btn" data-id="${id}" title="Edit">
                 <i class="fa-solid fa-pen" style="font-size:11px"></i>
               </button>
-              <button type="button" class="btn btn-sm btn-ghost btn-icon driver-delete-btn" data-id="${id}" title="Delete">
+              <button type="button" class="btn btn-sm btn-ghost btn-icon driver-delete-btn hidden" data-id="${id}" title="Delete">
                 <i class="fa-solid fa-trash" style="font-size:11px"></i>
               </button>
             </td>
@@ -135,11 +135,49 @@ MainApplication.DriversComponent.editDriver = function (id) {
   $("html, body").animate({ scrollTop: 0 }, 300);
 };
 
+MainApplication.DriversComponent.normalizeName = function (value) {
+  return $.trim(String(value || ""))
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+};
+
+MainApplication.DriversComponent.findDuplicateDriver = function (name, excludeId) {
+  var nameKey = MainApplication.DriversComponent.normalizeName(name);
+  var list = MainApplication.drivers || [];
+
+  for (var i = 0; i < list.length; i++) {
+    var d = list[i];
+    if (excludeId && d.ID == excludeId) {
+      continue;
+    }
+
+    if (MainApplication.DriversComponent.normalizeName(d.Title) === nameKey) {
+      return {
+        driver: d,
+        message: 'A driver named "' + d.Title + '" already exists.',
+      };
+    }
+  }
+
+  return null;
+};
+
 MainApplication.DriversComponent.saveDriver = function () {
   var title = $.trim($("#driver-title").val());
 
   if (!title) {
     MainApplication.notyf.error("Driver name is required");
+    return;
+  }
+
+  // Prevent duplicate driver names (case and spacing insensitive)
+  var duplicate = MainApplication.DriversComponent.findDuplicateDriver(
+    title,
+    DriversApp.editingId
+  );
+
+  if (duplicate) {
+    MainApplication.notyf.error(duplicate.message);
     return;
   }
 

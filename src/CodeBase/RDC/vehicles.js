@@ -99,7 +99,7 @@ MainApplication.VehiclesComponent.loadTable = function () {
               <button type="button" class="btn btn-sm btn-primary btn-icon vehicle-edit-btn" data-id="${id}" title="Edit">
                 <i class="fa-solid fa-pen" style="font-size:11px"></i>
               </button>
-              <button type="button" class="btn btn-sm btn-ghost btn-icon vehicle-delete-btn" data-id="${id}" title="Delete">
+              <button type="button" class="btn btn-sm btn-ghost btn-icon vehicle-delete-btn hidden" data-id="${id}" title="Delete">
                 <i class="fa-solid fa-trash" style="font-size:11px"></i>
               </button>
             </td>
@@ -149,6 +149,65 @@ MainApplication.VehiclesComponent.editVehicle = function (id) {
   $("html, body").animate({ scrollTop: 0 }, 300);
 };
 
+MainApplication.VehiclesComponent.normalizeKey = function (value) {
+  return $.trim(String(value || ""))
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/-/g, "");
+};
+
+MainApplication.VehiclesComponent.findDuplicateVehicle = function (
+  registeration,
+  licenseplate,
+  excludeId
+) {
+  var regKey = MainApplication.VehiclesComponent.normalizeKey(registeration);
+  var plateKey = MainApplication.VehiclesComponent.normalizeKey(licenseplate);
+  var list = MainApplication.vehicles || [];
+
+  for (var i = 0; i < list.length; i++) {
+    var v = list[i];
+    if (excludeId && v.ID == excludeId) {
+      continue;
+    }
+
+    var existingReg = MainApplication.VehiclesComponent.normalizeKey(
+      v.Registeration
+    );
+    var existingPlate = MainApplication.VehiclesComponent.normalizeKey(
+      v.LicensePlate
+    );
+
+    if (regKey && existingReg === regKey) {
+      return {
+        field: "Registration",
+        vehicle: v,
+        message:
+          'A vehicle with registration "' +
+          v.Registeration +
+          '" already exists' +
+          (v.Title ? " (" + v.Title + ")" : "") +
+          ".",
+      };
+    }
+
+    if (plateKey && existingPlate === plateKey) {
+      return {
+        field: "License plate",
+        vehicle: v,
+        message:
+          'A vehicle with license plate "' +
+          v.LicensePlate +
+          '" already exists' +
+          (v.Title ? " (" + v.Title + ")" : "") +
+          ".",
+      };
+    }
+  }
+
+  return null;
+};
+
 MainApplication.VehiclesComponent.saveVehicle = function () {
   var title = $.trim($("#vehicle-title").val());
   var registeration = $.trim($("#vehicle-registration").val());
@@ -164,6 +223,18 @@ MainApplication.VehiclesComponent.saveVehicle = function () {
   }
   if (!licenseplate) {
     MainApplication.notyf.error("License plate is required");
+    return;
+  }
+
+  // Prevent duplicate registration or license plate (case/spacing/hyphen insensitive)
+  var duplicate = MainApplication.VehiclesComponent.findDuplicateVehicle(
+    registeration,
+    licenseplate,
+    VehiclesApp.editingId
+  );
+
+  if (duplicate) {
+    MainApplication.notyf.error(duplicate.message);
     return;
   }
 
